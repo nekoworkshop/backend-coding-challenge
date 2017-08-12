@@ -1,33 +1,26 @@
 language: java
 jdk:
-  - oraclejdk8          // tells Travis to use Java 8
-
+- oraclejdk8          // tells Travis to use Java 8
 addons:
   sonarcloud:
-    organization: "nekoworkshop-github"
+    organization: nekoworkshop-github
     token:
-      secure: "SvRZK+/ESFQfxCv0do45pEdIYYmjZuJDIFOjPYarSYHzOuMc3Kjlyg0VF12T9uKag39JfKIPlFi6zVk3urgOwLv843IpEAQ5FqpTFuKf+lQfrV8D7vWsXGiumQ7kuUeKRA72MIO8mQPZTZ0btRM5DuSJCNxjdFDptbBmoy/LXa6vaI2HpK6LpNkWecRBmlAzziDm5qFMeC5AdufVOYzfUx+owrrhszGqNNsSA2o3N8GnkPkfhRcWqJ5df9CvHvsn8ZCu/WgaBAJOiLNPmSIv697FW2L83UzM6CRCcF8VjQwDRQz15bwo0IaqBu3BRDK5uhJySwZArSsk5y4Peu+QA/PoYD7ai/Yk99iEhNgNNbr49RxNqAFYw9hSLujae028QTIx9WwCLLzFBh8xtDKu3mqzn0xBRjWrnVr24vdX9MzlfZUNd1Tc8ganm3Hj+QWFAWnCKLBfwKa15DdaZD2LvXKMSeKSOoMAKqO8qXJqQnAnqRiSjw09x8ZxZdOOtu1m8dHk8NYBipL1W+7GSALqfak5Nx2co/E3qELP223Q0IH47FZG5oHL9epHTWUn74KLeT7ugMt7T/ZOPUFw3lBf11p33Oibycm/KarvI64h0qvrguDIIQ5hs5GMVGLyQ5hi80R1aHg28WGo9KnEmu4UPx5Y+5VvDEx6ODuK68rEqQQ="
-
-
+      secure: SvRZK+/ESFQfxCv0do45pEdIYYmjZuJDIFOjPYarSYHzOuMc3Kjlyg0VF12T9uKag39JfKIPlFi6zVk3urgOwLv843IpEAQ5FqpTFuKf+lQfrV8D7vWsXGiumQ7kuUeKRA72MIO8mQPZTZ0btRM5DuSJCNxjdFDptbBmoy/LXa6vaI2HpK6LpNkWecRBmlAzziDm5qFMeC5AdufVOYzfUx+owrrhszGqNNsSA2o3N8GnkPkfhRcWqJ5df9CvHvsn8ZCu/WgaBAJOiLNPmSIv697FW2L83UzM6CRCcF8VjQwDRQz15bwo0IaqBu3BRDK5uhJySwZArSsk5y4Peu+QA/PoYD7ai/Yk99iEhNgNNbr49RxNqAFYw9hSLujae028QTIx9WwCLLzFBh8xtDKu3mqzn0xBRjWrnVr24vdX9MzlfZUNd1Tc8ganm3Hj+QWFAWnCKLBfwKa15DdaZD2LvXKMSeKSOoMAKqO8qXJqQnAnqRiSjw09x8ZxZdOOtu1m8dHk8NYBipL1W+7GSALqfak5Nx2co/E3qELP223Q0IH47FZG5oHL9epHTWUn74KLeT7ugMt7T/ZOPUFw3lBf11p33Oibycm/KarvI64h0qvrguDIIQ5hs5GMVGLyQ5hi80R1aHg28WGo9KnEmu4UPx5Y+5VvDEx6ODuK68rEqQQ=
 before_script:
 - chmod a+x gradlew
-
 script:
-  - ./gradlew sonarqube
-
+- "./gradlew sonarqube"
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.sonar/cache'
-    - '$HOME/.gradle'
-    - '.gradle'
-
+  - "$HOME/.m2/repository"
+  - "$HOME/.sonar/cache"
+  - "$HOME/.gradle"
+  - ".gradle"
 deploy:
   provider: heroku
   api_key:
-    secure:  nBvLxC5kV7lNxmY8xrP8KN5d7iS2AJwQEn8K7jBQT3u4zmt/TsE3z7TUbdteCMR6VKoceFj/G2SQdlp9mhfYyf46QdcVHfhNVsEaUn7kSx8e3JiYaYAKsWyOx5UiriWmFlUAlQ2xNE4tE5rEZowuf2C5ZEIawn++/mYLyH9UUt3222+Crjjh5dgw57IssNzxcfFPgix2u6pxywXQXdSmS/uYksVJvRNjYp5oZXPxngmmsR63Te4saJh2eVhUXNO3Vs/kx/m+bzWTTVaWHFUtFtdeY66bKOOJ2DuhWU0sWQRwhPUgy6qJP7mjolGnCVIXWSM6K+THFwOx9BtCgwaLwQaZp8MTmS35eG1viNR2QpbB4J8HvRo6KFXTHUvuU9ncBsyTsbFRsXUn4A/I+HVQpim3hoQaMC+mZpaG5tOfskYuSID8F2ADfSS5G98+MfC6mJYfDgEg5Q3FhEKhoOExTFTxMoRF7ceB7sDJPQpRCvHha+WpVobKyc8oO5llMfXO3CEgagc8KSqfq/SNID8E1dXT4LonhMlFjYjjcphl6ewK6J6BHlqM7WP6VC261vFxYxOAoUEo4JP8SlfQPIb1tceSMD73XYNM5DeyXuZzXWctG1lq8qQIucZIqvBm+E5UR2c1Xdn3MtMCXZKGach0TNLuvt7cPyBIPF8vX+V1c4o=
-  app:     neko-test
+    secure: GTwLOe+sbYCzP8ybTIUGOiE8BAuN+ZQJ7ueW2Ucmb8uDVTDNy/IPCE7SPxKgacGTnhozFp367PMGgDcxOxycGFnTQ1+XeSQpTe9ga8lGoFE+f9STc3wko99u4+yTasq5MJfri6/v6PLop/YiynzwcVCmn/wzGqDePMrI0hLYuQSd4JJlzfdNtxfaqPLAf/wXjUN6AV98RRqGfyJbNNg8HUTCNtWsBkkUwnckrtIvy/K5z6XjbH4tcuNHSms+6q3tqH1UWFOmKLGCFVbUXOPyfLKwo+UZ2PhE8WiMruedgblL1Ghw2JAPu4aqSz8WtvNhzpT2Ra0S8arUO3Cn5dXQBY/W3NdvFTQ/kvtkIRwiA4L080PWX1dAgRDEDqXs05gMksQhv2Fh3TyekFUMUntAHvc20LQdtgdTP2ch6qY8wbhN8EmhOJGfLusBXwUsFhu6GTqmCuKObgr1lqn1PAhB2cGiaH1nfrDsgjGIG86UjsNZanM13HdKV/gHo8sBmjYEavpHImfl4BK46BASGNWZuoxBjlIOTsjaZ4oMwSuTSpI1hsRhT62duEudFFOb+RrGjv7G4W9NXpJdxKW7mARZMicnRbfdGvkkSyVyrtl6M0rXJAg7lTnEURj4p5KI66NBg3CU+ipxLstmGqHMSb1rJHV0S7IPFES/3iBCrbctiQ8=
+  app: neko-test
