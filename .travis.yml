@@ -1,3 +1,22 @@
 language: java
 jdk:
   - oraclejdk8          // tells Travis to use Java 8
+
+addons:
+  sonarcloud:
+    organization: "backendtest"
+    token:
+      secure: "XBqbCdGceriYj+mjVhFWfv+J25ImTsa+iMnwrPu+QPFQkIgj0JHdUN1ZzXf44rXJNFa+fKfTkrdV155EfmTrYr6RM3uWurnc1i6DnWZVw5XqFrlqZ/bdBiF9s6MivlB6ttEcfzgR9fbS3KWXEgyE+Bd9LvGQ86tS42bpwDfXYe+oPBq0eTIBLR5yLapdkKeyul5ma2xxQBvBTZ9/44vAyF4i3RLO1LfxWJ7h8GAnZQ8aKFIoG3acASNYrNLhOl5b1swT3ZBhBwiEsijOiYSuKIyc8IJmXdbWsg76dzhFr0jiPDd5oUN/zNZ1scGmiJtvLMGwhb0eHDosuPncd0vFG2RKGh6HJR8CzZv0SVj3cpgawGw4sh4uZiEexIeq9BJSVALmxw8tCsiSfPNgmySGETBewtWxgCFQ4a+vF43JJz+R7C/9V/p9uWneyh+3YpGlT5OMkOWbd/+6tSV9JBOePswPHBb1glwyfMe3av2y6AidS5w4Du4sbFqxrDS/G5iXFXVG9d0BzYtVf9iYJMqvlr6l7DLPvtMD1LhPb3jDrLKT/GUgOb+HrdKQRobWw31cJZRSsxMlsPkkSbwFydqKjhu+xNr9ocmolJb+bRB9T8mNy/LB0eYHI5frtW9/H7p13X/QDbEkMUrwHtZgvRI38TDBltHXzv4EizkQPt8/qZM="
+
+
+
+script:
+  - ./gradlew sonarqube
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/.gradle'
+    - '.gradle'
+
