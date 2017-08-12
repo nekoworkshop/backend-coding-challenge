@@ -1,0 +1,36 @@
+group 'com.coveo.backendtest'
+version '0.1'
+
+apply plugin: 'java'
+
+//Jetty plugin
+apply plugin: 'war'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+//Note that "-Dfile.encoding=UTF8" also needs to be set for full Unicode experience.
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+dependencies {
+    testCompile 'io.rest-assured:rest-assured:3.0.3'
+    testCompile 'io.rest-assured:json-schema-validator:3.0.3'
+    testCompile 'junit:junit:4.11'
+    testCompile "org.mockito:mockito-core:2.+"
+    testCompile "org.apache.logging.log4j:log4j-api:2.8.2"
+    testCompile "org.apache.logging.log4j:log4j-core:2.8.2"
+    compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.14'
+    compile 'mysql:mysql-connector-java:6.0.6'
+    compile 'org.glassfish:json:1.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
+    compile 'com.univocity:univocity-parsers:2.5.2'
+    compile 'org.apache.commons:commons-lang3:3.0'
+}
