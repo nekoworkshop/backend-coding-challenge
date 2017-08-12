@@ -5,6 +5,7 @@ apply plugin: 'java'
 //Jetty plugin
 apply plugin: 'war'
 apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+apply plugin: "jacoco"
 
 group 'com.coveo.backendtest'
 version '0.1'
@@ -21,7 +22,7 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-
+test.finalizedBy 'jacocoTestReport'
 
 dependencies {
     testCompile 'io.rest-assured:rest-assured:3.0.3'
@@ -36,4 +37,18 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
     compile 'com.univocity:univocity-parsers:2.5.2'
     compile 'org.apache.commons:commons-lang3:3.0'
+}
+
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+    reportsDir = file("$buildDir/reports/Jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination "${buildDir}/reports/jacocoHtml"
+    }
 }
