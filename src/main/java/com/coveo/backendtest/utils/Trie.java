@@ -1,10 +1,8 @@
-package com.coveo.backendtest.com.coveo.backendtest.utils;
+package com.coveo.backendtest.utils;
 
 import com.coveo.backendtest.GeoDataDAO;
 import com.coveo.backendtest.GeoDataRecordObj;
-import org.apache.commons.collections4.ListUtils;
 
-import javax.inject.Inject;
 import java.util.*;
 
 public class Trie {
@@ -115,14 +113,12 @@ public class Trie {
      * @return The resule is stored in a two dimensional list. The first row is the exact match while the other row
      *          is partial match (auto-completion)
      */
-    public List<List<GeoDataRecordObj>> searchCity (String str){
+    public List<StringMatchResultObj> searchCity (String str){
         //convert the search string to lower case.
         str = str.toLowerCase();
 
         //Prepare the list to be returned.
-        List<List<GeoDataRecordObj>> result = new ArrayList<List<GeoDataRecordObj>>(2);
-        result.add(new ArrayList<GeoDataRecordObj>());
-        result.add(new ArrayList<GeoDataRecordObj>());
+        List<StringMatchResultObj> result = new ArrayList<>();
 
         /**
          * The searchNode method will return a node that exact matches the query string.
@@ -138,15 +134,21 @@ public class Trie {
         if (node == null){
             return Collections.emptyList();
         }else{
-            //Store the city record that matches exactly to the query string.
-            result.set(0,node.getExactMatch());
+            //Add exact match result.
+            for (GeoDataRecordObj city: node.getExactMatch())
+                result.add(new StringMatchResultObj(MatchTypes.EXACT_MATCH, city));
 
             //Now we need to find all the city that has the query string as its prefix.
+            //We use a set to rule out the duplications.
             Set<GeoDataRecordObj> superStringMatch = new HashSet<>();
-            //Recursively traverse its sub tree to find all cities within.
+
+            //Recursively traverse the sub tree to find all cities within.
             for(TrieNode child: node.getChildren().values())
-                superStringMatch.addAll(this.getCityBySuperString(child));
-            result.set(1,new ArrayList<>(superStringMatch));
+                superStringMatch.addAll(getCityBySuperString(child));
+
+            //Add prefix match result from the temporary set.
+            for(GeoDataRecordObj city: superStringMatch)
+                result.add(new StringMatchResultObj(MatchTypes.PREFIX_MATCH, city));
             return result;
         }
 

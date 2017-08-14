@@ -1,4 +1,4 @@
-package com.coveo.backendtest.com.coveo.backendtest.utils;
+package com.coveo.backendtest.utils;
 
 import org.junit.Test;
 

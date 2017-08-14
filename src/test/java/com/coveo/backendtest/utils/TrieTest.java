@@ -1,4 +1,4 @@
-package com.coveo.backendtest.com.coveo.backendtest.utils;
+package com.coveo.backendtest.utils;
 
 import com.coveo.backendtest.GeoDataRecordObj;
 import org.junit.After;
@@ -53,17 +53,17 @@ public class TrieTest {
     public void singleMatchSearchTest() throws Exception{
         Trie t = new Trie();
         t.insert(cMontreal);
-        List<List<GeoDataRecordObj>> result = t.searchCity("Montréal");
+        List<StringMatchResultObj> result = t.searchCity("Montreal");
 
         /**
          * Assert that:
-         * 1. The super string match should be return zero result.
-         * 2. The strict string match should return one result.
-         * 3. The sole result we get is montreal.
+         * 1. We only have one result.
+         * 2. The only result is an exact match.
+         * 3. The matched city is Montreal.
          */
-        assertEquals(0,result.get(1).size());
-        assertEquals(1,result.get(0).size());
-        assertTrue(result.get(0).contains(cMontreal));
+        assertEquals(1,result.size());
+        assertEquals(MatchTypes.EXACT_MATCH,result.get(0).getMatchType());
+        assertEquals(cMontreal,result.get(0).getCityRecord());
     }
 
     @Test
@@ -79,13 +79,13 @@ public class TrieTest {
     }
 
     private void unicodeExactMatchSearch(Trie t, String cityName) throws Exception{
-        List<List<GeoDataRecordObj>> result = t.searchCity(cityName);
+        List<StringMatchResultObj> result = t.searchCity(cityName);
 
         /**
          * Assert that:
          * The exact match returned has the non-ascii name as it's alternative name.
          */
-        assertTrue( result.get(0).get(0).getAlternatenames().contains(cityName));
+        assertTrue( result.get(0).getCityRecord().getAlternatenames().contains(cityName));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class TrieTest {
         t.insert(cMontgomery);
         t.insert(cQuebec);
 
-        List<List<GeoDataRecordObj>> result = t.searchCity("mon");
+        List<StringMatchResultObj> result = t.searchCity("Mont");
 
         /**
          * Assert that:
@@ -103,10 +103,9 @@ public class TrieTest {
          * 2. The strict string match should return zero result.
          * 3. Montreal and Montgomery exist in the super string match reuslt.
          */
-        assertEquals(2,result.get(1).size());
-        assertEquals(0,result.get(0).size());
-        assertTrue(result.get(1).contains(cMontreal));
-        assertTrue(result.get(1).contains(cMontgomery));
+        assertEquals(2,result.size());
+        assertTrue((cMontreal==result.get(0).getCityRecord())|| (cMontreal == result.get(1).getCityRecord()));
+        assertTrue((cMontgomery==result.get(0).getCityRecord())|| (cMontgomery == result.get(1).getCityRecord()));
     }
 
     @Test
@@ -117,19 +116,33 @@ public class TrieTest {
         t.insert(cMontreal);
         t.insert(cMontreal);
 
-        List<List<GeoDataRecordObj>> result = t.searchCity("montreal");
+        List<StringMatchResultObj> result = t.searchCity("Montreal");
 
         /**
          * Assert that:
-         * 1. The super string match should be return zero result.
-         * 2. The strict string match should return one result.
-         * 3. The sole result we get is montreal.
+         * 1. We only have one result.
+         * 2. The only result is an exact match.
+         * 3. The matched city is Montreal.
          */
-        assertEquals(0,result.get(1).size());
-        assertEquals(1,result.get(0).size());
-        assertTrue(result.get(0).contains(cMontreal));
+        assertEquals(1,result.size());
+        assertEquals(MatchTypes.EXACT_MATCH,result.get(0).getMatchType());
+        assertEquals(cMontreal,result.get(0).getCityRecord());
     }
 
-    //TODO: "cityoutofnowhere" test
+    @Test
+    public void noMatchTest() throws Exception{
+        Trie t = new Trie();
+        t.insert(cMontreal);
+        t.insert(cMontgomery);
+        t.insert(cQuebec);
 
+
+        List<StringMatchResultObj> result = t.searchCity("CityOutOfNoWhere");
+
+        /**
+         * Assert that:
+         * The return size should be zero.
+         */
+        assertEquals(0,result.size());
+    }
 }
