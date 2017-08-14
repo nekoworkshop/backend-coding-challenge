@@ -8,12 +8,20 @@ package com.coveo.backendtest;
  *
  */
 
+import com.coveo.backendtest.com.coveo.backendtest.utils.Trie;
+
 import java.util.ArrayList;
 
 public class CitySuggestionFinder {
 
+    private Trie trie;
+
+    public CitySuggestionFinder(Trie t){
+        this.trie = t;
+    }
+
     //TODO: actual search logic.
-    public CitySuggestionCollection lookup(){
+    public CitySuggestionCollection lookup(int weightingScheme){
         CitySuggestionCollection result = new CitySuggestionCollection();
 
         return result;

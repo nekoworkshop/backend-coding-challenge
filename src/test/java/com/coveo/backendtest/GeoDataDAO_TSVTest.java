@@ -15,7 +15,7 @@ public class GeoDataDAO_TSVTest {
     private GeoDataDAO_TSV dao;
     @Before
     public void setUp() throws Exception {
-        dao = GeoDataDAO_TSV.getInstance();
+        dao = new GeoDataDAO_TSV(new InputStreamReader(this.getClass().getResourceAsStream("/testGeoData.tsv"), "UTF-8"));
     }
 
     @After

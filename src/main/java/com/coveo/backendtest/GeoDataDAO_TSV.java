@@ -4,6 +4,7 @@ import com.univocity.parsers.common.processor.RowListProcessor;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import org.apache.commons.lang3.StringUtils;
+import org.jvnet.hk2.annotations.Service;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -18,17 +19,11 @@ import java.util.List;
  */
 public class GeoDataDAO_TSV implements GeoDataDAO {
 
-    private static ArrayList<GeoDataRecordObj> allGeoData = null;
+    private ArrayList<GeoDataRecordObj> allGeoData = null;
     private InputStreamReader inputStreamReader;
 
-    /**
-     * Threaded safe singleton by Initialization-on-demand holder idiom.
-     */
-    private static class Holder{
-        private static final GeoDataDAO_TSV INSTANCE = new GeoDataDAO_TSV();
-    }
-    public static GeoDataDAO_TSV getInstance(){
-        return Holder.INSTANCE;
+    public GeoDataDAO_TSV (InputStreamReader inputStreamReader){
+        this.inputStreamReader = inputStreamReader;
     }
 
     @Override
@@ -39,6 +34,7 @@ public class GeoDataDAO_TSV implements GeoDataDAO {
         return allGeoData;
     }
 
+    //TODO: Error handling for not supplying inputStreamReader
     //Used for manually reload the database. Useful if the database is being constantly updated.
     public synchronized void reloadData(){
         TsvParserSettings settings = new TsvParserSettings();

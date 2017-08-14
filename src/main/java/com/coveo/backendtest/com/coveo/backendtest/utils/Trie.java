@@ -1,28 +1,56 @@
 package com.coveo.backendtest.com.coveo.backendtest.utils;
 
+import com.coveo.backendtest.GeoDataDAO;
 import com.coveo.backendtest.GeoDataRecordObj;
 import org.apache.commons.collections4.ListUtils;
 
+import javax.inject.Inject;
 import java.util.*;
 
 public class Trie {
-    private TrieNode root;
 
-    public Trie() {
-        root = new TrieNode();
+    private TrieNode root;
+    private GeoDataDAO dao;
+
+    public Trie(GeoDataDAO dao) {
+        this.dao = dao;
+        this.populate();
+    }
+
+    public Trie(){
+        this.root = new TrieNode();
     }
 
     /**
-     * Public method for adding a city with all it's possible names to the trie.
+     * Public method for on-demand rebuild request.
+     */
+    public void rebuild(){
+        this.populate();
+    }
+
+    /**
+     * private method for populate or rebuilding the Trie.
+     */
+    private void populate(){
+        this.root = new TrieNode();
+        List<GeoDataRecordObj> l = dao.getAllGeoData();
+        for(GeoDataRecordObj o: l){
+            this.insert(o);
+        }
+    }
+
+
+    /**
+     * Private method for adding a city with all it's possible names to the trie.
      * For the purpose of searching, all strings will be converted to lowercase.
      *
      * @param city
      */
-    public void insert(GeoDataRecordObj city){
-        this.insert(city,city.getName().toLowerCase());
-        this.insert(city,city.getAsciiname().toLowerCase());
-        for(String alternateName: city.getAlternatenames()){
-            this.insert(city,alternateName.toLowerCase());
+    public synchronized void insert(GeoDataRecordObj city){
+        this.insert(city, city.getName().toLowerCase());
+        this.insert(city, city.getAsciiname().toLowerCase());
+        for (String alternateName : city.getAlternatenames()) {
+            this.insert(city, alternateName.toLowerCase());
         }
     }
 
@@ -165,5 +193,14 @@ public class Trie {
         for(TrieNode child: node.getChildren().values())
             result.addAll(getCityBySuperString(child));
         return result;
+    }
+
+
+    public GeoDataDAO getDao() {
+        return dao;
+    }
+
+    public void setDao(GeoDataDAO dao) {
+        this.dao = dao;
     }
 }

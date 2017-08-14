@@ -1,7 +1,9 @@
 package com.coveo.backendtest;
 
+import com.coveo.backendtest.com.coveo.backendtest.utils.Trie;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,7 +16,20 @@ import javax.ws.rs.core.UriInfo;
 @Path("suggestions")
 public class RequestHandler {
 
+    private Trie trie;
+    private CitySuggestionFinder finder;
+
+    public RequestHandler(Trie t, CitySuggestionFinder f){
+        this.trie = t;
+        this.finder = f;
+    }
+
+    /**
+     * The no-argument constructor is called by the container.
+     */
     public RequestHandler(){
+        this.trie = ServiceLocator.getTrieInstance();
+        this.finder = new CitySuggestionFinder(trie);
     }
 
     @GET
@@ -27,6 +42,8 @@ public class RequestHandler {
         String queryParam = queryParams.getFirst("q");
         String latitudeParam = queryParams.getFirst("latitude");
         String longitudeParam = queryParams.getFirst("longitude");
+
+
 
         CitySuggestionCollection responseBody = new CitySuggestionCollection();
 
