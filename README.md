@@ -1,3 +1,24 @@
+Test API deployed at : https://neko-test.herokuapp.com/suggestions
+
+## Features
+
+- Supports prefix search (autocomplete).
+- Supports search in alternative names, therefore allowing search in languages other than English and French
+- Supports search parameters such as excluding city by distance or populatio, turning on or off distance weighting factors.
+
+## Performance
+
+3600 requests/s on a single logical processor of Xeon X5670.
+
+## TODO
+
+-Fix memory leak.
+-Implement fuzzy search.
+-Refactor the code for improved maintainability
+
+
+
+
 # Coveo Backend Coding Challenge
 (inspired by https://github.com/busbud/coding-challenge-backend-c)
 
