@@ -1,6 +1,7 @@
-package com.coveo.backendtest;
+package com.coveo.backendtest.framework;
 
-import com.coveo.backendtest.com.coveo.backendtest.utils.Trie;
+import com.coveo.backendtest.GeoDataDAO;
+import com.coveo.backendtest.utils.Trie;
 
 public class ServiceLocator {
 

@@ -1,6 +1,8 @@
 package com.coveo.backendtest;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
@@ -86,7 +88,10 @@ public class GeoDataRecordObj {
     }
 
     public void setAlternatenames(ArrayList<String>  alternatenames) {
-        this.alternatenames = alternatenames;
+        if (alternatenames == null)
+            this.alternatenames = new ArrayList<>();
+        else
+            this.alternatenames = alternatenames;
     }
 
     public double getLatitude() {

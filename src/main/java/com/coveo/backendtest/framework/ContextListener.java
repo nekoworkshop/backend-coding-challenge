@@ -1,7 +1,9 @@
-package com.coveo.backendtest;
+package com.coveo.backendtest.framework;
 
 
-import com.coveo.backendtest.com.coveo.backendtest.utils.Trie;
+import com.coveo.backendtest.GeoDataDAO_TSV;
+import com.coveo.backendtest.framework.ServiceLocator;
+import com.coveo.backendtest.utils.Trie;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -20,7 +22,7 @@ public class ContextListener implements ServletContextListener {
         try {
             //Initialize DAO instance
             ServiceLocator.setDAOInstance(new GeoDataDAO_TSV(new InputStreamReader(this.
-                    getClass().getResourceAsStream("/testGeoData.tsv"), "UTF-8")));
+                    getClass().getResourceAsStream("/cities_canada-usa.tsv"), "UTF-8")));
             //Initialize Trie instance. The trie will be populated with the data from the DAO.
             ServiceLocator.setTrieInstance(new Trie(ServiceLocator.getDAOInstance()));
         } catch (UnsupportedEncodingException e) {

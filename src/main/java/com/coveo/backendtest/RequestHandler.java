@@ -1,9 +1,16 @@
 package com.coveo.backendtest;
+/**
+ * This class is responsible for receiving the query from the user as well as returning the
+ * final result back to the user.
+ *
+ * Dependency: CitySuggestionFinder, the class handles the searching,filtering and weighting.
+ *              Trie, dependency of CitySuggestionFinder, data structure used in searching.
+ */
 
-import com.coveo.backendtest.com.coveo.backendtest.utils.Trie;
+import com.coveo.backendtest.framework.ServiceLocator;
+import com.coveo.backendtest.utils.Trie;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,6 +26,11 @@ public class RequestHandler {
     private Trie trie;
     private CitySuggestionFinder finder;
 
+    /**
+     * This constructor is used for testing.
+     * @param t
+     * @param f
+     */
     public RequestHandler(Trie t, CitySuggestionFinder f){
         this.trie = t;
         this.finder = f;
@@ -29,23 +41,37 @@ public class RequestHandler {
      */
     public RequestHandler(){
         this.trie = ServiceLocator.getTrieInstance();
-        this.finder = new CitySuggestionFinder(trie);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String Respond(@QueryParam("name") String name, @Context UriInfo uriInfo, String content) throws JsonProcessingException{
 
-        //TODO: be able to obtain the search result in the form of CitySuggestionObj.
-
+        //Reading request parameter
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
         String queryParam = queryParams.getFirst("q");
         String latitudeParam = queryParams.getFirst("latitude");
         String longitudeParam = queryParams.getFirst("longitude");
 
+        //Now construct the search parameters.
+        SearchParam sParam = new SearchParam();
 
+        //The string user typed.
+        sParam.setSearchString(queryParam);
 
-        CitySuggestionCollection responseBody = new CitySuggestionCollection();
+        //Check if the user provided valid position info.
+        if(latitudeParam.isEmpty() || longitudeParam.isEmpty()) {
+            //If not, don't use the distance weighting bonus.
+            sParam.setUseDistanceBonus(false);
+        }else{
+            //If user position is available, put the info into the search param.
+           sParam.setUserLong(Double.parseDouble(longitudeParam));
+           sParam.setUserLat(Double.parseDouble(latitudeParam));
+           sParam.setUseDistanceBonus(true);
+        }
+
+        CitySuggestionFinder finder = new CitySuggestionFinder(trie);
+        CitySuggestionCollection responseBody = finder.lookup(sParam);
 
         return responseBody.generateJSON();
     }

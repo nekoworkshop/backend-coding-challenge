@@ -1,10 +1,12 @@
 package com.coveo.backendtest.utils;
 
+import com.coveo.backendtest.GeoDataDAO_TSV;
 import com.coveo.backendtest.GeoDataRecordObj;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +49,12 @@ public class TrieTest {
 
     @After
     public void tearDown() throws Exception {
+    }
+
+    @Test
+    public void daoReadTest() throws Exception{
+        GeoDataDAO_TSV dao = new GeoDataDAO_TSV(new InputStreamReader(this.getClass().getResourceAsStream("/testGeoData.tsv"), "UTF-8"));
+        Trie t = new Trie(dao);
     }
 
     @Test

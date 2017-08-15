@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * DAO for tsv files, responsible for reading and parsing the geo database records.
  *
- * Use getInstance to obtain the reference and use getAllGeoDate() retrive an array of parsed GeoDataRecordObjs.
+ * The IO handle for file reading is supplied by the caller.
  */
 public class GeoDataDAO_TSV implements GeoDataDAO {
 
@@ -26,6 +26,7 @@ public class GeoDataDAO_TSV implements GeoDataDAO {
         this.inputStreamReader = inputStreamReader;
     }
 
+    //Populate the data when accessed for the first time.
     @Override
     public ArrayList<GeoDataRecordObj> getAllGeoData() {
         if(allGeoData == null) {
@@ -35,7 +36,13 @@ public class GeoDataDAO_TSV implements GeoDataDAO {
     }
 
     //TODO: Error handling for not supplying inputStreamReader
-    //Used for manually reload the database. Useful if the database is being constantly updated.
+
+    /**
+     * Method for loading and parsing the raw strings from the database.
+     *
+     * This method can be manually invoked to refresh the data set. This does not automatically refresh the Trie or other
+     * data structure used for searching, though.
+     */
     public synchronized void reloadData(){
         TsvParserSettings settings = new TsvParserSettings();
         settings.setLineSeparatorDetectionEnabled(true);

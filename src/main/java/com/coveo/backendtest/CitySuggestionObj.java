@@ -11,15 +11,25 @@ package com.coveo.backendtest;
  *
  */
 
+import com.coveo.backendtest.utils.StringMatchResultObj;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "name", "latitude", "longitude", "score"})
 public class CitySuggestionObj implements Comparable<CitySuggestionObj>{
 
+    private static String[] canadaAdmin1Map = {"AB","BC","MB","NB","NL","Undefined code","NS","ON","PE","QC","SK","YT","NT","NU"};
+
     private String name = "Undefined name";
     private String latitude = "Undefined latitude";
     private String longitude = "Undefined longitude";
     private double score = -1;
+
+    public CitySuggestionObj (GeoDataRecordObj cityRecord, double score){
+        this.name = cityRecord.getName()+", "+admin1ToString(cityRecord.getAdmin1Code(),cityRecord.getCountryCode())+", "+countryCodeToString(cityRecord.getCountryCode());
+        this.latitude = Double.toString(cityRecord.getLatitude());
+        this.longitude = Double.toString(cityRecord.getLongitude());
+        this.score = score;
+    }
 
     public CitySuggestionObj(String name, String latitude, String longitude, double score){
         this.name = name;
@@ -29,6 +39,18 @@ public class CitySuggestionObj implements Comparable<CitySuggestionObj>{
     }
 
     public CitySuggestionObj(){
+    }
+
+    private static String countryCodeToString (String code){
+        if (code.equals("CA"))
+            return "Canada";
+        return "USA";
+    }
+
+    private static String admin1ToString (String admin1Code, String countryCode){
+        if (countryCode.equals("CA"))
+            return canadaAdmin1Map[Integer.parseInt(admin1Code)-1];
+        return admin1Code;
     }
 
 

@@ -44,11 +44,13 @@ public class Trie {
      *
      * @param city
      */
-    public synchronized void insert(GeoDataRecordObj city){
+    public void insert(GeoDataRecordObj city){
         this.insert(city, city.getName().toLowerCase());
         this.insert(city, city.getAsciiname().toLowerCase());
-        for (String alternateName : city.getAlternatenames()) {
-            this.insert(city, alternateName.toLowerCase());
+        if (!city.getAlternatenames().isEmpty()) {
+            for (String alternateName : city.getAlternatenames()) {
+                this.insert(city, alternateName.toLowerCase());
+            }
         }
     }
 

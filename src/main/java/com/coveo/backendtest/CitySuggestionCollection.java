@@ -2,6 +2,7 @@ package com.coveo.backendtest;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +25,14 @@ public class CitySuggestionCollection {
 
     public CitySuggestionCollection() {
         this.citySuggestionObjs = new ArrayList<>();
+    }
+
+    public CitySuggestionCollection (Set<CitySuggestionObj> c){
+        this.citySuggestionObjs = new ArrayList<>();
+
+       for(CitySuggestionObj i:c){
+           this.addSuggestion(i);
+       }
     }
 
     public void addSuggestion (CitySuggestionObj s){

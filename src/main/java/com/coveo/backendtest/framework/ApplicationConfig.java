@@ -1,4 +1,4 @@
-package com.coveo.backendtest;
+package com.coveo.backendtest.framework;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
