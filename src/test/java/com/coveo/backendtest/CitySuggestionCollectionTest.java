@@ -63,14 +63,11 @@ public class CitySuggestionCollectionTest {
         }
 
         outputString = origCollection.generateJSON();
-        System.out.println(outputString);
 
         CitySuggestionCollection parsedCollection = mapper.readValue(outputString, CitySuggestionCollection.class);
 
         Boolean descendingOrder = true;
         for(int i=0;i<9;i++){
-            System.out.println(parsedCollection.getCitySuggestionObjs().get(i).getScore());
-            System.out.println(parsedCollection.getCitySuggestionObjs().get(i+1).getScore());
             if (parsedCollection.getCitySuggestionObjs().get(i).getScore() < parsedCollection.getCitySuggestionObjs().get(i+1).getScore()) {
                 descendingOrder = false;
                 break;

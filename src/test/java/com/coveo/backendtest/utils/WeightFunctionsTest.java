@@ -43,7 +43,7 @@ public class WeightFunctionsTest {
         //Gaspe
         city.setLatitude(48.8316);
         city.setLongitude(64.4869);
-        assertEquals(0.076666,WeightFunctions.distanceWeight(sParam,city),0.01);
+        assertEquals(0.0415,WeightFunctions.distanceWeight(sParam,city),0.01);
     }
 
     @Test
