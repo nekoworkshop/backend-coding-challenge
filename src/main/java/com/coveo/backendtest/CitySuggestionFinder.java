@@ -10,10 +10,7 @@ package com.coveo.backendtest;
  * @see com.coveo.backendtest.utils.Trie, com.coveo.backendtest.SearchParam ,com.coveo.backendtest.utils.WeightFunctions
  */
 
-import com.coveo.backendtest.utils.Haversine;
-import com.coveo.backendtest.utils.StringMatchResultObj;
-import com.coveo.backendtest.utils.Trie;
-import com.coveo.backendtest.utils.WeightFunctions;
+import com.coveo.backendtest.utils.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,10 +19,10 @@ import java.util.Set;
 
 public class CitySuggestionFinder {
 
-    private Trie trie;
+    private StringSearchAggregator searchAggregator;
 
-    public CitySuggestionFinder(Trie t){
-        this.trie = t;
+    public CitySuggestionFinder(StringSearchAggregator t){
+        this.searchAggregator = t;
     }
 
     public CitySuggestionCollection lookup(SearchParam sParam){
@@ -34,7 +31,8 @@ public class CitySuggestionFinder {
         Set<CitySuggestionObj> results = new HashSet<>();
 
         //Retrieve candidates from the trie.
-        List<StringMatchResultObj> matchedCities = trie.searchCity(sParam.getSearchString());
+        assert (this.searchAggregator != null);
+        List<StringMatchResultObj> matchedCities = searchAggregator.searchCity(sParam.getSearchString());
 
         //Now we iterate through all candidates and insert the valid ones into the result set.
         double maxScore = 0.0;

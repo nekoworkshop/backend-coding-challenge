@@ -5,7 +5,7 @@ import com.coveo.backendtest.GeoDataRecordObj;
 
 import java.util.*;
 
-public class Trie {
+public class Trie extends StringMatchAlgo{
 
     private TrieNode root;
     private GeoDataDAO dao;
@@ -88,25 +88,6 @@ public class Trie {
             if(i==name.length()-1)
                 t.addExactMatch(city);
         }
-    }
-
-    // Returns if the word is in the trie.
-    public boolean search(String word) {
-        TrieNode t = searchNode(word);
-
-        if(t != null && t.isLeaf())
-            return true;
-        else
-            return false;
-    }
-
-    // Returns if there is any word in the trie
-    // that starts with the given prefix.
-    public boolean startsWith(String prefix) {
-        if(searchNode(prefix) == null)
-            return false;
-        else
-            return true;
     }
 
     /**

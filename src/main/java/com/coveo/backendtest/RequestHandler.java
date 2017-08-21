@@ -8,6 +8,7 @@ package com.coveo.backendtest;
  */
 
 import com.coveo.backendtest.framework.ServiceLocator;
+import com.coveo.backendtest.utils.StringSearchAggregator;
 import com.coveo.backendtest.utils.Trie;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -23,24 +24,26 @@ import javax.ws.rs.core.UriInfo;
 @Path("suggestions")
 public class RequestHandler {
 
-    private Trie trie;
+    private StringSearchAggregator searchAggregator;
     private CitySuggestionFinder finder;
 
     /**
      * This constructor is used for testing.
-     * @param t
+     * @param searchAggregator
      * @param f
      */
-    public RequestHandler(Trie t, CitySuggestionFinder f){
-        this.trie = t;
+    public RequestHandler(StringSearchAggregator searchAggregator, CitySuggestionFinder f){
+        this.searchAggregator = searchAggregator;
         this.finder = f;
     }
 
     /**
-     * The no-argument constructor is called by the container.
+     * The no-argument constructor is called by the container. In production environment the instance of dependency will
+     * be aquired from the service locator.
      */
     public RequestHandler(){
-        this.trie = ServiceLocator.getTrieInstance();
+        this.searchAggregator = ServiceLocator.getStringSearchAggregatorInstance();
+        this.finder = new CitySuggestionFinder(ServiceLocator.getStringSearchAggregatorInstance());
     }
 
     @GET
@@ -70,7 +73,6 @@ public class RequestHandler {
            sParam.setUseDistanceBonus(true);
         }
 
-        CitySuggestionFinder finder = new CitySuggestionFinder(trie);
         CitySuggestionCollection responseBody = finder.lookup(sParam);
 
         return responseBody.generateJSON();

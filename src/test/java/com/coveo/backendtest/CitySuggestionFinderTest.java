@@ -1,5 +1,6 @@
 package com.coveo.backendtest;
 
+import com.coveo.backendtest.utils.StringSearchAggregator;
 import com.coveo.backendtest.utils.Trie;
 import org.junit.After;
 import org.junit.Before;
@@ -12,12 +13,15 @@ import static org.junit.Assert.*;
 public class CitySuggestionFinderTest {
 
     Trie t;
+    StringSearchAggregator searchAggregator;
     CitySuggestionFinder finder;
 
     @Before
     public void setUp() throws Exception {
         t = new Trie(new GeoDataDAO_TSV(new InputStreamReader(this.getClass().getResourceAsStream("/cities_canada-usa.tsv"))));
-        finder = new CitySuggestionFinder(t);
+        searchAggregator = new StringSearchAggregator();
+        searchAggregator.addStringMatchAlgorithm(t);
+        finder = new CitySuggestionFinder(searchAggregator);
     }
 
     @After

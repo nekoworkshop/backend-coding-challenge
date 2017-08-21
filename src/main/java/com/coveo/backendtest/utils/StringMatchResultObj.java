@@ -6,6 +6,7 @@ public class StringMatchResultObj {
 
     private MatchTypes matchType;
     private GeoDataRecordObj cityRecord;
+    private boolean alternativeNameMatch;
 
     public StringMatchResultObj(MatchTypes matchType, GeoDataRecordObj cityRecord) {
         this.matchType = matchType;
@@ -26,5 +27,13 @@ public class StringMatchResultObj {
 
     public void setCityRecord(GeoDataRecordObj cityRecord) {
         this.cityRecord = cityRecord;
+    }
+
+    public boolean isAlternativeNameMatch() {
+        return alternativeNameMatch;
+    }
+
+    public void setAlternativeNameMatch(boolean alternativeNameMatch) {
+        this.alternativeNameMatch = alternativeNameMatch;
     }
 }
