@@ -5,6 +5,8 @@ Test API deployed at : https://neko-test.herokuapp.com/suggestions
 - Supports prefix search (autocomplete).
 - Supports search in alternative names, therefore allowing search in languages other than English and French
 - Supports search parameters such as excluding city by distance or populatio, turning on or off distance weighting factors.
+- The API can ignore query strings shorter than a pre-defined length to improve overall performance, though this check should be done in the front-end.
+
 
 ## Performance
 
@@ -12,9 +14,9 @@ Test API deployed at : https://neko-test.herokuapp.com/suggestions
 
 ## TODO
 
--Fix memory leak.
--Implement fuzzy search.
--Refactor the code for improved maintainability
+~~Fix memory leak.~~ The memeory usage and GC is doing fine. The JVM needs to be configured to return unused heap to the system,though.
+- Implement fuzzy search.
+- Refactor the code for improved maintainability
 
 
 

@@ -9,7 +9,6 @@ package com.coveo.backendtest;
 
 import com.coveo.backendtest.framework.ServiceLocator;
 import com.coveo.backendtest.utils.StringSearchAggregator;
-import com.coveo.backendtest.utils.Trie;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.ws.rs.GET;
@@ -26,15 +25,17 @@ public class RequestHandler {
 
     private StringSearchAggregator searchAggregator;
     private CitySuggestionFinder finder;
+    private int ignoreQueryShorterThan;
 
     /**
      * This constructor is used for testing.
      * @param searchAggregator
      * @param f
      */
-    public RequestHandler(StringSearchAggregator searchAggregator, CitySuggestionFinder f){
+    public RequestHandler(StringSearchAggregator searchAggregator, CitySuggestionFinder f, int ignoreQueryShorterThan){
         this.searchAggregator = searchAggregator;
         this.finder = f;
+        this.ignoreQueryShorterThan = ignoreQueryShorterThan;
     }
 
     /**
@@ -44,17 +45,23 @@ public class RequestHandler {
     public RequestHandler(){
         this.searchAggregator = ServiceLocator.getStringSearchAggregatorInstance();
         this.finder = new CitySuggestionFinder(ServiceLocator.getStringSearchAggregatorInstance());
+        this.ignoreQueryShorterThan = 0;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String Respond(@QueryParam("name") String name, @Context UriInfo uriInfo, String content) throws JsonProcessingException{
 
+
         //Reading request parameter
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
         String queryParam = queryParams.getFirst("q");
         String latitudeParam = queryParams.getFirst("latitude");
         String longitudeParam = queryParams.getFirst("longitude");
+
+        //Ignore query string shorter than a threshold. Default is 0, meaning we don't ignore anything.
+        if(queryParam.length() < ignoreQueryShorterThan)
+            return new CitySuggestionCollection().generateJSON();
 
         //Now construct the search parameters.
         SearchParam sParam = new SearchParam();
