@@ -8,13 +8,11 @@ package com.coveo.backendtest;
  */
 
 import com.coveo.backendtest.framework.ServiceLocator;
+import com.coveo.backendtest.utils.LanguageTag;
 import com.coveo.backendtest.utils.StringSearchAggregator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -50,14 +48,19 @@ public class RequestHandler {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String Respond(@QueryParam("name") String name, @Context UriInfo uriInfo, String content) throws JsonProcessingException{
-
-
-        //Reading request parameter
-        MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
-        String queryParam = queryParams.getFirst("q");
-        String latitudeParam = queryParams.getFirst("latitude");
-        String longitudeParam = queryParams.getFirst("longitude");
+    public String Respond(
+            @QueryParam("q") String queryParam,
+            @DefaultValue("") @QueryParam("latitude") String latitudeParam,
+            @DefaultValue("") @QueryParam("longitude") String longitudeParam,
+            @DefaultValue("FRE_ENG") @QueryParam("language") String language,
+            @DefaultValue("-1") @QueryParam("filterCityLargerThan") int filterCityLargerThan,
+            @DefaultValue("-1") @QueryParam("filterCitySmallerThan") int filterCitySmallerThan,
+            @DefaultValue("-1") @QueryParam("filterCityFartherThan") double filterCityFartherThan,
+            @DefaultValue("-1") @QueryParam("filterCityCloserThan") double filterCityCloserThan,
+            @DefaultValue("false") @QueryParam("filterPrefixMatch") String filterPrefixMatch,
+            @DefaultValue("true") @QueryParam("useDistanceBonus") String useDistanceBonus,
+            @DefaultValue("true") @QueryParam("usePopulationBonus") String usePopulationBonus,
+            @Context UriInfo uriInfo, String content) throws JsonProcessingException{
 
         //Ignore query string shorter than a threshold. Default is 0, meaning we don't ignore anything.
         if(queryParam.length() < ignoreQueryShorterThan)
@@ -79,6 +82,34 @@ public class RequestHandler {
            sParam.setUserLat(Double.parseDouble(latitudeParam));
            sParam.setUseDistanceBonus(true);
         }
+
+        //Set preferred language in search.
+        switch (language){
+            case "FRE_ENG":
+                sParam.setPreferedLanguage(LanguageTag.FREandENG);
+                break;
+            case"OTHER":
+                sParam.setPreferedLanguage(LanguageTag.others);
+                break;
+            default:
+                sParam.setPreferedLanguage(LanguageTag.FREandENG);
+        }
+
+        if(filterCityLargerThan != -1)
+            sParam.setFilterCityLargerThan(filterCityLargerThan);
+        if(filterCitySmallerThan != -1)
+            sParam.setFilterCitySmallerThan(filterCitySmallerThan);
+        if(filterCityFartherThan != -1)
+            sParam.setFilterCityFartherThan(filterCityFartherThan);
+        if(filterCityCloserThan != -1)
+            sParam.setFilterCityCloserThan(filterCityCloserThan);
+
+        sParam.setFilterPrefixMatch(Boolean.parseBoolean(filterPrefixMatch));
+
+        sParam.setUseDistanceBonus(Boolean.parseBoolean(useDistanceBonus));
+
+        sParam.setUsePopulationBonus(Boolean.parseBoolean(usePopulationBonus));
+
 
         CitySuggestionCollection responseBody = finder.lookup(sParam);
 

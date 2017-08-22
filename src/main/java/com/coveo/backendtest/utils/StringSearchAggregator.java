@@ -1,7 +1,11 @@
 package com.coveo.backendtest.utils;
 
+import com.coveo.backendtest.SearchParam;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class StringSearchAggregator {
 
@@ -15,12 +19,16 @@ public class StringSearchAggregator {
         searchAlgorithms.add(algoToAdd);
     }
 
-    public List<StringMatchResultObj> searchCity(String searchString){
+    public Set<StringMatchResultObj> searchCity(SearchParam searchParam){
 
-        List<StringMatchResultObj> result = new ArrayList<>();
+        Set<StringMatchResultObj> result = new HashSet<>();
 
+        //Iterate through all available search algorithms
         for(StringMatchAlgo algo: this.searchAlgorithms){
-            result.addAll(algo.searchCity(searchString));
+
+            //Only run search on the data structure with a language we are interested in.
+            if(algo.getLanguageTag() == searchParam.getPreferedLanguage())
+                result.addAll(algo.searchCity(searchParam.getSearchString()));
         }
 
         return result;

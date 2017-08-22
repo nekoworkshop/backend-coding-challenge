@@ -32,7 +32,7 @@ public class CitySuggestionFinder {
 
         //Retrieve candidates from the trie.
         assert (this.searchAggregator != null);
-        List<StringMatchResultObj> matchedCities = searchAggregator.searchCity(sParam.getSearchString());
+        Set<StringMatchResultObj> matchedCities = searchAggregator.searchCity(sParam);
 
         //Now we iterate through all candidates and insert the valid ones into the result set.
         double maxScore = 0.0;

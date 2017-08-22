@@ -10,6 +10,7 @@ public class Trie extends StringMatchAlgo{
     private TrieNode root;
     private GeoDataDAO dao;
 
+    @Deprecated
     public Trie(GeoDataDAO dao) {
         this.dao = dao;
         this.populate();
@@ -22,13 +23,14 @@ public class Trie extends StringMatchAlgo{
     /**
      * Public method for on-demand rebuild request.
      */
-    public void rebuild(){
-        this.populate();
-    }
+//    public void rebuild(){
+//        this.populate();
+//    }
 
     /**
      * private method for populate or rebuilding the Trie.
      */
+    @Deprecated
     private void populate(){
         this.root = new TrieNode();
         List<GeoDataRecordObj> l = dao.getAllGeoData();
@@ -39,11 +41,12 @@ public class Trie extends StringMatchAlgo{
 
 
     /**
-     * Private method for adding a city with all it's possible names to the trie.
+     * Public method for adding a city with all it's possible names to the trie.
      * For the purpose of searching, all strings will be converted to lowercase.
      *
      * @param city
      */
+    @Deprecated
     public void insert(GeoDataRecordObj city){
         this.insert(city, city.getName().toLowerCase());
         this.insert(city, city.getAsciiname().toLowerCase());
@@ -56,12 +59,12 @@ public class Trie extends StringMatchAlgo{
 
 
     /**
-     * Private method for adding a single name with its associated city record into the trie.
+     * Public method for adding a single name with its associated city record into the trie.
      * This is where we build the trie.
      * @param city
      * @param name
      */
-    private void insert(GeoDataRecordObj city, String name) {
+    public void insert(GeoDataRecordObj city, String name) {
         HashMap<Character, TrieNode> children = root.getChildren();
 
         assert(name.length()>0);
@@ -119,7 +122,7 @@ public class Trie extends StringMatchAlgo{
         }else{
             //Add exact match result.
             for (GeoDataRecordObj city: node.getExactMatch())
-                result.add(new StringMatchResultObj(MatchTypes.EXACT_MATCH, city));
+                result.add(new StringMatchResultObj(MatchTypes.EXACT_MATCH, this.getLanguageTag(), city));
 
             //Now we need to find all the city that has the query string as its prefix.
             //We use a set to rule out the duplications.
@@ -131,7 +134,7 @@ public class Trie extends StringMatchAlgo{
 
             //Add prefix match result from the temporary set.
             for(GeoDataRecordObj city: superStringMatch)
-                result.add(new StringMatchResultObj(MatchTypes.PREFIX_MATCH, city));
+                result.add(new StringMatchResultObj(MatchTypes.PREFIX_MATCH, this.getLanguageTag(), city));
             return result;
         }
 

@@ -1,6 +1,7 @@
 package com.coveo.backendtest;
 
 import com.coveo.backendtest.utils.Haversine;
+import com.coveo.backendtest.utils.LanguageTag;
 import com.coveo.backendtest.utils.MatchTypes;
 import com.coveo.backendtest.utils.StringMatchResultObj;
 
@@ -11,6 +12,10 @@ import com.coveo.backendtest.utils.StringMatchResultObj;
 public class SearchParam {
 
     private String searchString = "Undefined";
+
+    //Language and algorithm preference.
+
+    private LanguageTag preferedLanguage = LanguageTag.FREandENG;
 
     //Filtering preference
     private int filterCityLargerThan = Integer.MAX_VALUE;
@@ -52,20 +57,20 @@ public class SearchParam {
 
         //Distance preferences
         if(Haversine.distance(userLat,userLong,city.getLatitude(),city.getLongitude())
-                <= filterCityCloserThan)
+                < filterCityCloserThan)
             return false;
 
         if(Haversine.distance(userLat,userLong,city.getLatitude(),city.getLongitude())
-                >= filterCityFartherThan)
+                > filterCityFartherThan)
             return false;
 
         //City size preferences
         if(city.getPopulation()
-                <= filterCitySmallerThan)
+                < filterCitySmallerThan)
             return false;
 
         if(city.getPopulation()
-                >= filterCityLargerThan)
+                > filterCityLargerThan)
             return false;
 
         //Search method preferences
@@ -151,4 +156,27 @@ public class SearchParam {
         this.userLong = userLong;
     }
 
+    public LanguageTag getPreferedLanguage() {
+        return preferedLanguage;
+    }
+
+    public void setPreferedLanguage(LanguageTag preferedLanguage) {
+        this.preferedLanguage = preferedLanguage;
+    }
+
+    public boolean isFilterFuzzyMatch() {
+        return filterFuzzyMatch;
+    }
+
+    public void setFilterFuzzyMatch(boolean filterFuzzyMatch) {
+        this.filterFuzzyMatch = filterFuzzyMatch;
+    }
+
+    public boolean isFilterPrefixMatch() {
+        return filterPrefixMatch;
+    }
+
+    public void setFilterPrefixMatch(boolean filterPrefixMatch) {
+        this.filterPrefixMatch = filterPrefixMatch;
+    }
 }
