@@ -7,6 +7,62 @@ Test API deployed at : https://neko-test.herokuapp.com/suggestions
 - Supports search parameters such as excluding city by distance or populatio, turning on or off distance weighting factors.
 - The API can ignore query strings shorter than a pre-defined length to improve overall performance, though this check should be done in the front-end.
 
+## Query Paramters
+
+* **Mandatory**
+
+    `q = [String]` Partial or complete search term.
+    
+* **Optional**
+
+    `latitude = [float]`
+    
+    `longitude = [float]`
+    
+    `language = ["FRE_ENG","OTHER"]` Specify the language of interest. Use OTHER to search in alternative names.
+    
+    `filterCityLargerThan = [integer]`
+    
+    `filterCitySmallerThan = [integer]` Exclude cities from result based on cities's population.
+    
+    `filterCityFartherThan = [float]`
+    
+    `filterCityCloserThan = [float]` Exclude cities from result based on city's distance from caller
+    
+    `filterPrefixMatch = ["true","false"]` Turn off or on prefix search.
+    
+    `useDistanceBonus = ["true","false"]` Decides whether consider city's distance from caller during calculation of scores.
+    
+    `usePopulationBonus = ["true","false"]` Decides whether consider city's population during calculation of scores.
+    
+## Example queries.
+
+All caller locations are pointed to Toronto.
+
+ - https://neko-test.herokuapp.com/suggestions?q=N&latitude=43.70011&longitude=-79.4163&filterCitySmallerThan=100000
+
+    A user searching for "N". Only shows city with population larger than 100000
+
+ - https://neko-test.herokuapp.com/suggestions?q=N&latitude=43.70011&longitude=-79.4163&filterCitySmallerThan=100000&useDistanceBonus=false
+
+    The same search but don't care about how far the city is.
+
+ - https://neko-test.herokuapp.com/suggestions?q=Mont&latitude=43.70011&longitude=-79.4163
+
+    Same user search for "Mont", no particular search preference.
+
+ - https://neko-test.herokuapp.com/suggestions?q=Mont&latitude=43.70011&longitude=-79.4163&filterCityFartherThan=600
+
+    The same search but search area restricted to no farther than 600 km to Toronto.
+
+ - https://neko-test.herokuapp.com/suggestions?q=%E3%83%A2%E3%83%B3&latitude=43.70011&longitude=-79.4163&language=OTHER
+
+    User search with Japanese katakana 「モン」(mon)
+
+ - https://neko-test.herokuapp.com/suggestions?q=%E9%AD%81%E5%8C%97&latitude=43.70011&longitude=-79.4163&language=OTHER
+
+    User search with Simplified Chinese “魁北”(kui2 bei3)
+    
 
 ## Performance
 
@@ -14,7 +70,7 @@ Test API deployed at : https://neko-test.herokuapp.com/suggestions
 
 ## TODO
 
-~~Fix memory leak.~~ The memeory usage and GC is doing fine. The JVM needs to be configured to return unused heap to the system,though.
+- ~~Fix memory leak.~~ The memeory usage and GC is doing fine. The JVM needs to be configured to return unused heap to the system,though.
 - Implement fuzzy search.
 - Refactor the code for improved maintainability
 
