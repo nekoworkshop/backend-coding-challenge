@@ -49,7 +49,7 @@ public class RequestHandler {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String Respond(
-            @QueryParam("q") String queryParam,
+            @DefaultValue("") @QueryParam("q") String queryParam,
             @DefaultValue("") @QueryParam("latitude") String latitudeParam,
             @DefaultValue("") @QueryParam("longitude") String longitudeParam,
             @DefaultValue("FRE_ENG") @QueryParam("language") String language,
